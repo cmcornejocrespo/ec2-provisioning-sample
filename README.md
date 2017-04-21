@@ -1,7 +1,7 @@
-# efc-taxonomy-tagger-provisioning
+# Provisions AWS stuff using Ansible
 
 Ansible playbooks to provision taxonomy tagger ecosystem in AWS
-See [aws-infra.png](https://github.com/DiceHoldingsInc/efc-taxonomy-tagger-provisioning/blob/develop/aws-infra.png) for more details.
+See [aws-infra.png](https://github.com/cmcornejocrespo/ec2-provisioning-sample/blob/master/aws-infra.png) for more details.
 
 ## Requirements
 - Ansible must be installed
