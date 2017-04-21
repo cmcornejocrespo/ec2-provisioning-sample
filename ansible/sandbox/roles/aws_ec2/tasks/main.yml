@@ -1,0 +1,26 @@
+- name: Provision EC2 instance
+  ec2:
+    keypair: "{{ key_pair_name }}"
+    group: "{{ security_group }}"
+    region: "{{ region }}"
+    vpc_subnet_id: "{{ subnet }}"
+    instance_type: "{{ instance_type }}"
+    instance_profile_name: "{{ iam_role }}"
+    monitoring: yes
+    image: "{{ image }}"
+    wait: True
+    exact_count: 1
+    count_tag:
+      Name: "{{ tag_name }}"
+    instance_tags:
+      Name: "{{ tag_name }}"
+      group: "{{ tag_group }}"
+  register: ec2
+
+- name: Add all instance public IPs to host group
+  add_host: hostname={{ item.public_ip }} groups=tag_group_{{ tag_group }},tag_Name_{{ tag_name }} private_key_file=~/.ssh/{{ key_pair_name }}.pem
+  with_items: ec2.instances
+
+- name: Wait for the instances to boot by checking the ssh port
+  wait_for: host={{ item.public_ip }} port=22 delay=60 timeout=320 state=started
+  with_items: ec2.instances

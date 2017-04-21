@@ -1,0 +1,55 @@
+# key, route53 zone, security groups, AWS ELB, AWS SQS and elasticache
+- hosts: localhost
+  connection: local
+  gather_facts: False
+
+  roles:
+    - { role: aws_route53_zone }
+    # Order is important in security groups (as some rely on the others)
+    - { role: aws_group_job_tagger }
+    - { role: aws_group_elb_tagger_rest_public }
+    - { role: aws_group_elb_tagger_rest }
+    - { role: aws_group_tagger_rest }
+
+    - { role: aws_sqs, name: efc_jobs }
+    - { role: aws_sqs, name: bg_jobs }
+    - { role: aws_elasticache, name: job-tags }
+    - { role: aws_elb_public, name: tagger-public, security_group: elb_tagger_rest_public_sg }
+    - { role: aws_elb, name: tagger, security_group: elb_tagger_rest_sg }
+
+# Tagger REST VMs
+- hosts: localhost
+  connection: local
+  gather_facts: False
+
+  vars:
+    tag_group: sandbox_tagger_rest
+    security_group: tagger_rest_sg
+    iam_role: TaggerRest
+    iam_policy: TaggerRest
+    instance_type: m4.large
+
+  roles:
+    - { role: aws_policy, policy_json: 'files/policies/TaggerRest.json' }
+    - { role: aws_ec2, tag_name: sandbox_tagger_rest_a }
+    - { role: aws_ec2, tag_name: sandbox_tagger_rest_b }
+
+# Job Tagger VMs
+- hosts: localhost
+  connection: local
+  gather_facts: False
+
+  vars:
+    security_group: job_tagger_sg
+    iam_role: JobTagger
+    iam_policy: JobTagger
+    instance_type: t2.small
+
+  roles:
+    - { role: aws_policy, policy_json: 'files/policies/JobTagger.json' }
+    - { role: aws_ec2, tag_name: sandbox_job_tagger_efc_a, tag_group: sandbox_job_tagger_efc }
+    - { role: aws_ec2, tag_name: sandbox_job_tagger_efc_b, tag_group: sandbox_job_tagger_efc }
+    - { role: aws_ec2, tag_name: sandbox_job_tagger_efc_c, tag_group: sandbox_job_tagger_efc }
+    - { role: aws_ec2, tag_name: sandbox_job_tagger_bg_a, tag_group: sandbox_job_tagger_bg }
+    - { role: aws_ec2, tag_name: sandbox_job_tagger_bg_b, tag_group: sandbox_job_tagger_bg }
+    - { role: aws_ec2, tag_name: sandbox_job_tagger_bg_c, tag_group: sandbox_job_tagger_bg }

@@ -1,0 +1,4 @@
+#!/usr/bin/sh -e
+
+cd ansible/dev
+ansible-playbook dev.yml -vvv

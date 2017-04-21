@@ -1,0 +1,4 @@
+- name: Create AWS SQS
+  sqs_queue:
+    name: "{{ name }}"
+    region: "{{ region }}"

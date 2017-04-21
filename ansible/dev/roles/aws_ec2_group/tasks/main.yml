@@ -1,0 +1,23 @@
+- name: Create EC2 security group
+  ec2_group:
+    name: "{{ security_group }}"
+    description: EC2 dev test tagger infrastructure
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ region }}"
+
+    rules:
+    - proto: tcp
+      from_port: 22
+      to_port: 22
+      cidr_ip: 0.0.0.0/0
+    - proto: tcp
+      from_port: 8080
+      to_port: 8080
+      cidr_ip: 0.0.0.0/0
+
+    rules_egress:
+    - proto: all
+      from_port: all
+      to_port: all
+      cidr_ip: 0.0.0.0/0
+

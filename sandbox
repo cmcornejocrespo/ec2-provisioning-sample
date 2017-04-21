@@ -1,0 +1,4 @@
+#!/usr/bin/sh -e
+
+cd ansible/sandbox
+ansible-playbook sandbox.yml -vvv

@@ -1,0 +1,20 @@
+# EC2 instance creation
+- hosts: localhost
+  connection: local
+  gather_facts: False
+
+  vars:
+    dns_zone: efc.com
+    iam_role: efc-dev-test
+    iam_policy: efc-dev-test
+    security_group: efc-dev-test_sg
+
+  roles:
+    - { role: aws_policy, policy_json: 'files/policies/efc-dev-test.json' }
+    - { role: aws_ec2_group }
+    - { role: aws_ec2, name: monitoring, instance_type: m3.large }
+    - { role: aws_ec2, name: splunk, instance_type: m3.large }
+    - { role: aws_ec2, name: efc-dev-test-rest, instance_type: t2.micro }
+    - { role: aws_ec2, name: efc-dev-test-tagger, instance_type: t2.micro }
+    - { role: aws_sqs, name: efc-dev-test-job-queue }
+    - { role: aws_sqs, name: bg-dev-test-job-queue }

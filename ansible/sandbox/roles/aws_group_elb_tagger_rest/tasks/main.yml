@@ -1,0 +1,18 @@
+- name: Create EC2 security group
+  ec2_group:
+    name: elb_tagger_rest_sg
+    description: EC2 ELB for tagger REST (private)
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ region }}"
+
+    rules:
+    - proto: tcp
+      from_port: 80
+      to_port: 80
+      cidr_ip: 0.0.0.0/0
+
+    rules_egress:
+    - proto: all
+      from_port: all
+      to_port: all
+      cidr_ip: 0.0.0.0/0

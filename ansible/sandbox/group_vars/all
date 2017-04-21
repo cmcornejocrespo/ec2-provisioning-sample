@@ -1,0 +1,10 @@
+# --- efc ---
+region: us-east-1
+subnet: subnet-bb35c790
+image: ami-fce3c696
+vpc_id: vpc-301a8d55
+
+# --- shared ---
+ubuntu_release: trusty
+dns_zone: efc.com
+key_pair_name: efc-new-jenkins-01

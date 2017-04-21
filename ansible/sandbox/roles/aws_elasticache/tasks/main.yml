@@ -1,0 +1,33 @@
+- name: Create EC2 security group
+  ec2_group:
+    name: elasticache_sg
+    description: elasticache (for job tags - tagger REST)
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ region }}"
+
+    rules:
+    - proto: tcp
+      from_port: 6379
+      to_port: 6379
+      group_name: tagger_rest_sg
+
+    rules_egress:
+    - proto: all
+      from_port: all
+      to_port: all
+      cidr_ip: 0.0.0.0/0
+  register: _ec2_group
+
+- name: Create elasticache redis
+  elasticache:
+    name: "{{ name }}"
+    engine: redis
+    state: present
+    region: "{{ region }}"
+    cache_engine_version: "{{ cache_engine_version }}"
+    node_type: "{{ node_type }}"
+    num_nodes: 1
+    cache_port: 6379
+    cache_security_groups: []
+    security_group_ids:
+      - "{{ _ec2_group.group_id }}"

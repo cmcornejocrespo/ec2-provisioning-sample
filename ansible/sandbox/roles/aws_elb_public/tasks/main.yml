@@ -1,0 +1,22 @@
+- name: Create public ELB
+  local_action:
+    module: ec2_elb_lb
+    name: "{{ name }}"
+    security_group_names: "{{ security_group }}"
+    state: present
+    connection_draining_timeout: 60
+    subnets:
+      - "{{ subnet }}"
+    region: "{{ region }}"
+    listeners:
+      - protocol: http
+        load_balancer_port: 80
+        instance_port: 80
+    health_check:
+        ping_protocol: http
+        ping_port: 80
+        ping_path: "/health"
+        response_timeout: 3
+        interval: 5
+        unhealthy_threshold: 2
+        healthy_threshold: 2

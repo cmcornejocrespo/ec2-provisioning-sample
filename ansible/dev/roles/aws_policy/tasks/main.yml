@@ -1,0 +1,19 @@
+- name: Create iam role
+  iam:
+    iam_type: role
+    name: "{{ iam_role }}"
+    state: present
+
+- name: Shows iam_role and iam_policy
+  debug: msg="role name {{ iam_role }} and policy name {{ iam_policy }}"
+
+- name: Create policy
+  iam_policy:
+    iam_type: role
+    iam_name: "{{ iam_role }}"
+    policy_name: "{{ iam_policy }}"
+    policy_json: "{{ lookup('file', '{{ policy_json }}') }}"
+    state: present
+
+- name: Wait 15 seconds for iam policy to be propagated
+  pause: seconds=15

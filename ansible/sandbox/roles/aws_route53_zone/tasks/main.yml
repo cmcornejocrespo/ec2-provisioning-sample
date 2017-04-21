@@ -1,0 +1,6 @@
+- name: Create route53 (DNS) zone
+  route53_zone:
+      state: present
+      zone: "{{ dns_zone }}"
+      vpc_id: "{{ vpc_id }}"
+      vpc_region: "{{ region }}"

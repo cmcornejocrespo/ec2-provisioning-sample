@@ -1,0 +1,9 @@
+# --- efc  frankfurt-based config---
+region: eu-central-1
+subnet: subnet-c4fe14ad
+image: ami-87564feb
+vpc_id: vpc-438e612a
+
+# --- shared ---
+ubuntu_release: trusty
+key_pair_name: efc-new-jenkins-01
